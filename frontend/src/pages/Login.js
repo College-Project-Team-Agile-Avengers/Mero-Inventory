@@ -1,67 +1,111 @@
-
-
-
-import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+import React, { useState } from "react";
+import { useLogin } from "../hooks/useLogin"
+// import loginImage from '.\loginImage.png'
+// import userProfileImage from '.loginImage-userPofile.png';
+import "./designlogin.css";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  // const history = useHistory();
+  const { user } = useAuthContext()
+  const navigate = useNavigate
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  // const [error, setError] = useState("");
+  const { login, error, isLoading } = useLogin()
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Simulate backend validation
-    const userData = {
-      username: 'user123',
-      password: 'password123',
-    };
-
-    if (username === userData.username && password === userData.password) {
-      // Successful login
-      console.log('Login successful');
-      // Reset form fields
-      setUsername('');
-      setPassword('');
-      setError('');
-      // Redirect to home page
-      // history.push('/home');
-    } else {
-      // Invalid credentials
-      setError('Username or password does not match.');
+    if (email === "" || password === "") {
+      alert("both field required")
+      return;
     }
+    await login(email, password)
+
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className="signIn">
+      {/* <div className='signIn-page-image' style={{ width: "50%" }}>
+
+        <img style={{
+          height: "100%",
+          width: "100%",
+          objectFit: "cover"
+        }} src=".\loginImage.png" alt="LoginImage" />
+      </div> */}
+      <div className="signIn-form" style={{ width: "50%" }}>
         <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={handleUsernameChange} />
+          <h2 className="login" style={{ textAlign: "center" }}>
+            Mero Inventory
+          </h2>
+          <form className="mim-form" onSubmit={handleSubmit}>
+            <div>
+              <input
+                className="mim-input"
+                placeholder="Enter Email"
+                style={{
+                  borderBottom: "5px solid #AFD3E2",
+                  borderTop: "none",
+                  borderLeft: "none",
+                  borderRight: "none",
+                  marginBottom: "20px",
+                  backgroundImage: "url(./loginImage-userPofile.png)",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "20px",
+                }}
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </div>
+            <div>
+              <input
+                className="mim-input"
+                placeholder="Enter Password"
+                style={{
+                  borderBottom: "5px solid #AFD3E2",
+                  borderTop: "none",
+                  borderLeft: "none",
+                  borderRight: "none",
+                  marginBottom: "20px",
+                  backgroundImage: "url(./loginImage-userPassword.png)",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "25px",
+                }}
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            {/* <div
+              style={{
+                position: "relative",
+                left: "54px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                fontSize: "13px",
+              }}
+            >
+              Forget Password ?
+            </div> */}
+            <button className="loginBtn" type="submit" disabled={isLoading}>Login</button>
+            {error && <p className="error">{error}</p>}
+          </form>
         </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={handlePasswordChange} />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      </div>
     </div>
   );
 };
 
 export default LoginForm;
-
-

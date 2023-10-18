@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: 'Category',
     required: true,
   },
@@ -25,9 +25,15 @@ const productSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
+  },
+  warehouse: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Warehouse',
+    required: true,
   }
 }, {
   timestamps: true
 });
 
 module.exports = mongoose.model('Product', productSchema);
+
